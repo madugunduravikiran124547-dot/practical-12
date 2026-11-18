@@ -1,0 +1,48 @@
+
+#include <iostream>
+#include <climits>
+using namespace std;
+
+#define V 4
+
+int tsp(int graph[V][V], int visited, int pos, int count, int cost)
+{
+    if (count == V && graph[pos][0] != 0)
+    {
+        return cost + graph[pos][0];
+    }
+
+    int ans = INT_MAX;
+
+    for (int i = 0; i < V; i++)
+    {
+        if ((visited & (1 << i)) == 0 && graph[pos][i] != 0)
+        {
+            int newCost = tsp(graph,
+                              visited | (1 << i),
+                              i,
+                              count + 1,
+                              cost + graph[pos][i]);
+
+            ans = min(ans, newCost);
+        }
+    }
+
+    return ans;
+}
+
+int main()
+{
+    int graph[V][V] = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+
+    int result = tsp(graph, 1, 0, 1, 0);
+
+    cout << "Minimum travelling cost: " << result;
+
+    return 0;
+}
